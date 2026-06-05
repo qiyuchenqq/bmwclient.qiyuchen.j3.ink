@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BMWClient</title>
+    <meta name="description" content="BMWClient">
+    <meta name="keywords" content="BMWClient">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700;800&amp;family=Noto+Sans+SC:wght@300;400;500;700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="./css/index.css">
+    <style id="ext-inline-css-import-0">
+        :root {
+            /* Cai Install Colors (Old) */
+            --primary-color-cli-old: #00BFFF; /* DeepSkyBlue */
+            --secondary-color-cli-old: #1E90FF; /* DodgerBlue */
+            --primary-color-gui-old: #4A90E2; /* A softer blue */
+            --secondary-color-gui-old: #8A2BE2; /* BlueViolet */
+
+            /* Cai Install Reborn Colors */
+            --primary-color-reborn: #FF69B4; /* HotPink */
+            --secondary-color-reborn: #FF1493; /* DeepPink */
+
+            /* Cai Install Fluent Colors */
+            --primary-color-fluent: #00CED1; /* DarkTurquoise */
+            --secondary-color-fluent: #40E0D0; /* Turquoise */
+
+            /* DAuth Colors */
+            --primary-color-dauth-old: #9D00FF; /* Vibrant Violet */
+            --secondary-color-dauth-old: #8A2BE2; /* BlueViolet (Shared) */
+            --primary-color-dauth-new: #ff00ff; /* Neon Pink/Magenta */
+            --secondary-color-dauth-new: #D300C3; /* Deep Magenta */
+            
+            /* Resource & Community Colors */
+            --primary-color-resource: #9B59B6; /* Amethyst */
+            --secondary-color-resource: #8E44AD; /* Wisteria */
+            
+            /* Neon Palette */
+            --neon-blue: #00f6ff;
+            --neon-pink: #ff00ff;
+            --neon-violet: #9D00FF;
+
+            /* Base Colors */
+            --dark-bg: #010104;
+            --card-bg: rgba(18, 18, 22, 0.45);
+            --text-color: #E0E0E0;
+            --text-muted: #A0A0A0;
+            --border-color: rgba(100, 100, 120, 0.2);
+        }
+
+        /* --- Animations --- */
+        @keyframes gradient-text-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes neon-text-pulse { 0%, 100% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--neon-blue), 0 0 20px var(--neon-blue); } 50% { text-shadow: 0 0 10px #fff, 0 0 15px #fff, 0 0 25px var(--neon-blue), 0 0 30px var(--neon-blue); } }
+        @keyframes rotate-border { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes shimmer { 0% { transform: translateX(-150%) skewX(-30deg); } 100% { transform: translateX(150%) skewX(-30deg); } }
+        @keyframes blob-animation { 0% { transform: scale(1) translate(0, 0); } 33% { transform: scale(1.1) translate(20vw, -15vh); } 66% { transform: scale(0.9) translate(-20vw, 15vh); } 100% { transform: scale(1) translate(0, 0); } }
+        @keyframes subtle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* --- Base & Scrollbar --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: var(--dark-bg); color: var(--text-color); line-height: 1.7; overflow-x: hidden; position: relative; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-color-fluent); }
+
+        /* --- Flowing Neon Blob Background --- */
+        .background-blobs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden; }
+        .background-blobs div { position: absolute; background: radial-gradient(circle, currentColor 0%, transparent 70%); border-radius: 50%; will-change: transform; }
+        .blob-1 { color: var(--primary-color-fluent); width: 40vmax; height: 40vmax; top: -10vh; left: -10vw; animation: blob-animation 45s infinite alternate ease-in-out; }
+        .blob-2 { color: var(--primary-color-reborn); width: 35vmax; height: 35vmax; bottom: 5vh; right: -5vw; animation: blob-animation 40s infinite alternate ease-in-out reverse; }
+        .blob-3 { color: var(--neon-violet); width: 30vmax; height: 30vmax; bottom: 25vh; left: 10vw; animation: blob-animation 35s infinite alternate ease-in-out; }
+        .blob-4 { color: var(--neon-pink); width: 25vmax; height: 25vmax; top: 10vh; right: 20vw; animation: blob-animation 30s infinite alternate ease-in-out reverse; }
+        .background-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; backdrop-filter: blur(120px) saturate(150%); background: rgba(0,0,0,0.1); }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+        /* --- Header --- */
+        header { background: rgba(10, 10, 12, 0.5); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-color); padding: 15px 0; position: fixed; width: 100%; top: 0; z-index: 1000; }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Exo 2', sans-serif; font-size: 1.8em; font-weight: 800; text-decoration: none; color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        .logo span { background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-text-flow 8s ease infinite; }
+        nav ul { list-style: none; display: flex; }
+        nav ul li { margin-left: 30px; }
+        nav ul li a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.3s ease, text-shadow 0.3s ease; }
+        nav ul li a:hover { color: #fff; text-shadow: 0 0 5px var(--neon-blue); }
+
+        /* --- Hero Section --- */
+        .hero { padding-top: 200px; padding-bottom: 140px; text-align: center; animation: subtle-float 8s ease-in-out infinite; }
+        .hero h1 { font-family: 'Exo 2', sans-serif; font-size: 4.5em; margin-bottom: 20px; font-weight: 800; line-height: 1.2; color: white; animation: fadeInUp 0.8s ease-out, neon-text-pulse 4s ease-in-out infinite; }
+        .hero h1 .highlight { background: linear-gradient(90deg, var(--neon-blue), var(--neon-violet), var(--neon-pink)); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradient-text-flow 8s ease infinite; }
+        .hero p { font-size: 1.2em; max-width: 800px; margin: 0 auto 40px; color: var(--text-muted); animation: fadeInUp 0.8s ease-out 0.2s; animation-fill-mode: both; }
+        
+        /* --- Neon Button Styles --- */
+        .cta-button { display: inline-block; color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-size: 1.1em; font-weight: 700; transition: all 0.4s ease; position: relative; z-index: 1; border: 2px solid transparent; background-clip: padding-box; }
+        .cta-button::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -2px; border-radius: inherit; transition: all 0.4s ease; }
+        .cta-button:hover { transform: translateY(-3px) scale(1.05); color: #fff; }
+        .cta-button:hover::before { filter: blur(10px); opacity: 0.8; }
+        .cta-button.cai-reborn { background-color: var(--primary-color-reborn); box-shadow: 0 0 15px var(--primary-color-reborn); border-color: var(--primary-color-reborn); } .cta-button.cai-reborn::before { background: var(--primary-color-reborn); }
+        .cta-button.cai-fluent { background-color: var(--primary-color-fluent); box-shadow: 0 0 15px var(--primary-color-fluent); border-color: var(--primary-color-fluent); } .cta-button.cai-fluent::before { background: var(--primary-color-fluent); }
+        .cta-button.dauth-old { background-color: var(--primary-color-dauth-old); box-shadow: 0 0 15px var(--primary-color-dauth-old); border-color: var(--primary-color-dauth-old); } .cta-button.dauth-old::before { background: var(--primary-color-dauth-old); }
+        .cta-button.dauth-new { background-color: var(--primary-color-dauth-new); box-shadow: 0 0 15px var(--primary-color-dauth-new); border-color: var(--primary-color-dauth-new); } .cta-button.dauth-new::before { background: var(--primary-color-dauth-new); }
+        .cta-button.resource-site { background-color: var(--primary-color-resource); box-shadow: 0 0 15px var(--primary-color-resource); border-color: var(--primary-color-resource); } .cta-button.resource-site::before { background: var(--primary-color-resource); }
+        .community .cta-button { background-color: #5865F2; box-shadow: 0 0 15px #5865F2; border-color: #5865F2; } .community .cta-button::before { background: #5865F2; }
+        .community .cta-button.bilibili { background-color: #fb7299; box-shadow: 0 0 15px #fb7299; border-color: #fb7299; } .community .cta-button::before { background: #fb7299; }
+        
+        .github-button { display: inline-flex; align-items: center; justify-content: center; margin-top: 15px; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: 500; font-size: 0.9em; background-color: transparent; border: 2px solid; transition: all 0.3s ease; }
+        .github-button:hover { color: white; transform: translateY(-2px); }
+        .github-button.reborn { color: var(--primary-color-reborn); border-color: var(--primary-color-reborn); }
+        .github-button.fluent { color: var(--primary-color-fluent); border-color: var(--primary-color-fluent); }
+        .github-button.reborn:hover { background-color: var(--primary-color-reborn); box-shadow: 0 0 15px var(--primary-color-reborn); color: #000; }
+        .github-button.fluent:hover { background-color: var(--primary-color-fluent); box-shadow: 0 0 15px var(--primary-color-fluent); color: #000; }
+        .github-button img { width: 1.2em; height: 1.2em; margin-right: 8px; filter: invert(1); }
+
+        /* --- General Section Styles --- */
+        .section { padding: 80px 0; position: relative; z-index: 2; }
+        .section-title { font-family: 'Exo 2', sans-serif; text-align: center; font-size: 2.8em; margin-bottom: 50px; font-weight: 700; color: white; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
+        .section-divider { height: 2px; background: linear-gradient(90deg, transparent, var(--neon-blue), transparent); margin: 100px auto; max-width: 600px; border: none; opacity: 0.6; box-shadow: 0 0 15px var(--neon-blue); }
+        
+        /* --- Acrylic/Glass Cards with Flowing Patterns --- */
+        .dual-column-container, .three-column-container { display: grid; gap: 40px; }
+        .dual-column-container { grid-template-columns: 1fr 1fr; }
+        .three-column-container { grid-template-columns: 1fr 1fr 1fr; }
+
+        .column-card, .resource-card, .community, .shared-features, .legacy-links-card { background-color: var(--card-bg); backdrop-filter: blur(12px) saturate(120%); border-radius: 16px; border: 1px solid var(--border-color); transition: transform 0.4s ease, box-shadow 0.4s ease; position: relative; overflow: hidden; animation: fadeInUp 0.8s ease-out; padding: 40px; }
+        .column-card::after, .resource-card::after, .community::after, .shared-features::after, .legacy-links-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOCIgbnVtT2N0YXZlcz0iMyIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNub2lzZSkiIG9wYWNpdHk9IjAuMDMiLz48L3N2Zz4='); z-index: -1; pointer-events: none; }
+        .column-card::before, .resource-card::before, .legacy-links-card::before { content: ""; position: absolute; z-index: -1; top: 50%; left: 50%; width: 200%; height: 200%; background: conic-gradient( from 0deg at 50% 50%, transparent 0%, var(--border-glow-color, var(--neon-blue)) 20%, transparent 35% ); animation: rotate-border 10s linear infinite; opacity: 0.3; transition: opacity 0.4s ease; }
+        .column-card:hover::before, .resource-card:hover::before, .legacy-links-card:hover::before { opacity: 0.8; }
+        .column-card .shimmer, .resource-card .shimmer, .legacy-links-card .shimmer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; pointer-events: none; }
+        .column-card .shimmer::after, .resource-card .shimmer::after, .legacy-links-card .shimmer::after { content: ''; position: absolute; top: 0; left: 0; width: 50%; height: 200%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%); transform: translateX(-150%) skewX(-30deg); transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .column-card:hover .shimmer::after, .resource-card:hover .shimmer::after, .legacy-links-card:hover .shimmer::after { transform: translateX(250%) skewX(-30deg); }
+        .column-card:hover, .resource-card:hover, .legacy-links-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        
+        /* New Cai Install Card Colors */
+        .column-card.cai-reborn { --border-glow-color: var(--primary-color-reborn); }
+        .column-card.cai-fluent { --border-glow-color: var(--primary-color-fluent); }
+        /* Old Cai Install Card Colors */
+        .column-card.cai-cli-old { --border-glow-color: var(--primary-color-cli-old); }
+        .column-card.cai-gui-old { --border-glow-color: var(--primary-color-gui-old); }
+
+        .column-card.dauth-old { --border-glow-color: var(--neon-violet); }
+        .column-card.dauth-new { --border-glow-color: var(--neon-pink); }
+        .resource-card { --border-glow-color: var(--primary-color-resource); }
+        
+        .column-header { text-align: center; margin-bottom: 30px; position: relative; }
+        .column-header .icon { font-size: 48px; margin-bottom: 10px; }
+        .column-header .icon .material-icons { text-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+        
+        /* New Cai Install Icon Colors */
+        .column-header .reborn-icon { color: var(--primary-color-reborn); }
+        .column-header .fluent-icon { color: var(--primary-color-fluent); }
+        /* Old Cai Install Icon Colors */
+        .column-header .cli-old-icon { color: var(--primary-color-cli-old); }
+        .column-header .gui-old-icon { color: var(--primary-color-gui-old); }
+
+        .column-header .dauth-old-icon { color: var(--primary-color-dauth-old); }
+        .column-header .dauth-new-icon { color: var(--primary-color-dauth-new); }
+        .column-header h2 { font-family: 'Exo 2', sans-serif; font-size: 2em; color: white; margin-bottom: 5px; }
+        .column-header p { font-size: 1em; color: var(--text-muted); }
+        
+        .feature-list { list-style: none; padding: 0; margin-top: 20px; flex-grow: 1; position: relative; }
+        .feature-list li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; font-size: 1.05em; }
+        .feature-list .material-icons { margin-top: 3px; font-size: 22px; transition: color 0.3s, text-shadow 0.3s; }
+        .column-card:hover .feature-list .material-icons { text-shadow: 0 0 8px currentColor; }
+        
+        /* New Cai Install Feature List Colors */
+        .feature-list.cai-reborn .material-icons { color: var(--secondary-color-reborn); }
+        .feature-list.cai-fluent .material-icons { color: var(--secondary-color-fluent); }
+        /* Old Cai Install Feature List Colors */
+        .feature-list.cai-cli-old .material-icons { color: var(--secondary-color-cli-old); }
+        .feature-list.cai-gui-old .material-icons { color: var(--secondary-color-gui-old); }
+
+        .feature-list.dauth-old .material-icons { color: var(--secondary-color-dauth-old); }
+        .feature-list.dauth-new .material-icons { color: var(--secondary-color-dauth-new); }
+
+        .column-footer { margin-top: auto; padding-top: 30px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .column-card { display: flex; flex-direction: column; }
+        
+        /* --- Shared Features Section --- */
+        .shared-features { padding: 50px 20px; margin-top: 60px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .feature-card { text-align: center; padding: 20px; transition: transform 0.3s ease; }
+        .feature-card:hover { transform: scale(1.05); }
+        .feature-icon { font-size: 3em; margin-bottom: 15px; }
+        .feature-card h3 { font-family: 'Exo 2', sans-serif; font-size: 1.4em; margin-bottom: 10px; color: white; }
+        .feature-card p { color: var(--text-muted); }
+        #cai-shared-features .feature-icon { background: linear-gradient(90deg, var(--primary-color-reborn), var(--primary-color-fluent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #dauth-shared-features .feature-icon { background: linear-gradient(90deg, var(--neon-violet), var(--neon-pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- Resource Site Section --- */
+        .resource-card { text-align: center; padding: 60px 40px; }
+        .resource-card .icon { font-size: 48px; margin-bottom: 15px; color: var(--primary-color-resource); text-shadow: 0 0 15px currentColor; }
+        .resource-card h2 { font-family: 'Exo 2', sans-serif; font-size: 2.5em; margin-bottom: 20px; }
+        .resource-card p { font-size: 1.1em; max-width: 700px; margin: 0 auto 40px; color: var(--text-muted); }
+
+        /* --- Legacy Links Section --- */
+        .legacy-links-card { text-align: center; padding: 30px; margin-top: 40px; }
+        .legacy-links-card h3 { font-family: 'Exo 2', sans-serif; font-size: 1.8em; margin-bottom: 25px; color: var(--text-color); }
+        .legacy-links-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
+        .legacy-link { display: inline-flex; align-items: center; padding: 10px 20px; border-radius: 50px; text-decoration: none; font-weight: 500; font-size: 0.95em; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.1); }
+        .legacy-link.cli-old { background-color: rgba(0, 191, 255, 0.2); color: var(--primary-color-cli-old); border-color: var(--primary-color-cli-old); }
+        .legacy-link.gui-old { background-color: rgba(74, 144, 226, 0.2); color: var(--primary-color-gui-old); border-color: var(--primary-color-gui-old); }
+        .legacy-link:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .legacy-link.cli-old:hover { background-color: var(--primary-color-cli-old); color: #000; }
+        .legacy-link.gui-old:hover { background-color: var(--primary-color-gui-old); color: #000; }
+        .legacy-link img { width: 1.1em; height: 1.1em; margin-right: 8px; filter: invert(1); }
+
+        /* --- Community & Footer --- */
+        .community { text-align: center; padding: 60px 20px; }
+        .community h2 { font-family: 'Exo 2', sans-serif; font-size: 2.2em; margin-bottom: 20px; }
+        .community p { font-size: 1.1em; max-width: 600px; margin: 0 auto 30px; color: var(--text-muted); }
+        
+        footer { text-align: center; padding: 40px 0; margin-top: 60px; border-top: 1px solid var(--border-color); color: var(--text-muted); background: rgba(10, 10, 12, 0.3); }
+        footer a { color: var(--text-muted); text-decoration: none; transition: color 0.3s, text-shadow 0.3s; }
+        footer a:hover { color: white; text-shadow: 0 0 5px var(--neon-blue); }
+
+        /* --- Responsive --- */
+        @media (max-width: 1200px) { .three-column-container { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 992px) { .dual-column-container, .three-column-container { grid-template-columns: 1fr; } nav ul { display: none; } }
+        @media (max-width: 768px) { .hero h1 { font-size: 2.8em; } .hero p { font-size: 1em; } .section-title { font-size: 2.2em; } .legacy-links-grid { flex-direction: column; } }
+    </style>
+  </head>
+  <body>
+<body><div class="background-blobs"><div class="blob-1"></div><div class="blob-2"></div><div class="blob-3"></div><div class="blob-4"></div></div><div class="background-overlay"></div><header><div class="container"><a href="#" class="logo">BMW<span>Client</span></a><nav><ul><li><a href="#">BMWClient</a></li><li></li><li></li></ul></nav></div></header><main><section class="hero"><div class="container"><h1>BMW<span class="highlight">Client</span></h1><p>我们致力于为Heypixel玩家提供强大、免费且开源的客户端,都在这里为您呈现。</p></div></section><section id="cai-install" class="section"><div class="container"><h2 class="section-title">BMWClient</h2><div class="dual-column-container"><div class="column-card cai-reborn"><div class="shimmer"></div><div class="column-header"><div class="icon reborn-icon"><span class="material-icons">restart_alt</span></div><h2>BMWClient</h2><p>水影NextGen变体</p></div><ul class="feature-list cai-reborn"><li><span class="material-icons">architecture</span><div><strong>自研UI</strong><br/>一目了然</div></li><li><span class="material-icons">verified</span><div><strong>强大功能</strong><br/>增加了一些强力功能</div></li><li><span class="material-icons">cloud_sync</span><div><strong>强力绕过</strong><br/>可绕过GrimAC的一些检查</div></li><li><span class="material-icons">speed</span><div><strong>免费</strong><br/>曹家豪滚吧</div></li></ul><div class="column-footer"><a href="http://bmwclient.qiyuchen.j3.ink/bmwclient.zip" target="_blank" class="cta-button cai-reborn">下载</a><a href="https://github.com/HuanYuGG/BMWClient" target="_blank" class="github-button reborn"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik04IDBDMy41OCAwIDAgMy41OCAwIDhzMy41OCA4IDggOCA4LTMuNTggOC04UzEyLjQyIDAgOCAwem01LjQ5IDExLjU1Yy0uMTEuMTYtLjI4LjE2LS40My4wNWwtMS4yOC0uNzNjLS41My4zNS0xLjE0LjU1LTEuNzguNjMtLjA3LjMyLS4xOS44My0uMjIgMS4wOWgtMi4xM2MtLjAzLS4yNi0uMTYtLjc3LS4yMi0xLjA5LS42NC0uMDgtMS4yNS0uMjgtMS43OC0uNjNsLTEuMjguNzNjLS4xNS4wOC0uMzIuMDgtLjQzLS4wNUExLjQ0IDEuNDQgMCAwIDEgMy41MiAxMC4yN2MuMDMtLjE5LjE5LS4yOC4zNS0uMjFsMS4yNS0uMzVjLS4wMi0uMTYtLjA0LS4zMy0uMDQtLjQ5cy4wMS0uMzQuMDQtLjQ5TDMuODcgOC4zN2MtLjE2LS4wNi0uMzItLjE0LS4zNS0uMzMgLTA4LS4xOS4wMi0uMzkuMTMtLjUzbDEuMDktMS4yNWMuNDMtLjMyLjk0LS4yNCAxLjQtLjI0LjQ2IDAgLjk3LS4wOCAxLjQuMjRsMS4wOSAxLjI1Yy4xMS4xNC4xOS4zNC4xMy41N3MtLjE5LjI4LS4zNS4zM2wtMS4yNS4zNWMuMDYuMTYuMDQuMzMuMDQuNDlzLS4wMS4zNC0uMDQuNDlsMS4yNS4zNWMuMTYuMDYuMzIuMTMuMzUuMjFsLjAxLjAyYy4wNy4yMS0uMDIuNDItLjEzLjU1eiIvPjwvYXdlc29tZS1pY29uPg==" alt="GitHub"/>
+                                查看 GitHub 仓库
+                             </a></div></div><div class="column-card cai-reborn"><div class="shimmer"></div><div class="column-header"><div class="icon reborn-icon"><span class="material-icons">restart_alt</span></div><h2>加入QQ群</h2><p>水影NextGen变体</p></div><ul class="feature-list cai-reborn"><li><span class="material-icons">architecture</span><div><strong>最新版</strong><br/>下载</div></li><li><span class="material-icons">verified</span><div><strong>测试版</strong><br/>提供pre测试版</div></li><li><span class="material-icons">cloud_sync</span><div><strong>配置</strong><br/>配置多多</div></li></ul><div class="column-footer"><a href="https://qm.qq.com/q/qIgO9qQZuE" target="_blank" class="cta-button cai-reborn">加</a></div></div></div><!-- Cai Install Shared Features --><!-- Legacy Cai Install Links --></div></section></main><footer><div class="container"><p>© 2026 祁宇晨. All Rights Reserved.</p></div></footer></body>
+  </body>
+</html>
